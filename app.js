@@ -18,6 +18,7 @@ const server = http.createServer((req,res)=>{ // creating server
             console.log(chunk);
             body.push(chunk);
         });
+       /* below implemetations comes under blocking code. function `writeFileSync` blocks the code
         req.on('end',()=>{
             const parsedBody = Buffer.concat(body).toString();
             const message = parsedBody.split('=')[1];
@@ -25,7 +26,17 @@ const server = http.createServer((req,res)=>{ // creating server
         });
         res.statusCode = 302;
         res.setHeader('Location','/');
-        return res.end();
+        return res.end();*/
+
+        return req.on('end',()=>{
+           const parsedBody = Buffer.concat(body).toString(); 
+           const meassge = parsedBody.split("=")[1];
+           fs.writeFile('message.txt',meassge,val=>{
+            res.statusCode = 302;
+            res.setHeader('Location','/');
+            return res.end();
+           });
+        });
     }
 
    //setting response
